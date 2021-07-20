@@ -7,3 +7,8 @@ cp hosts local.hosts
 
 ansible-playbook -i ./local.hosts local.playbooks.yaml
 ```
+
+
+## Learning
+
+### Jinja

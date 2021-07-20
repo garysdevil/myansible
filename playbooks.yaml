@@ -6,4 +6,4 @@
     test_IP: "{{ ansible_eth0['ipv4']['address'] }}"
   become: true
   roles:
-    - zabbix_agent
+    - 0.prepare

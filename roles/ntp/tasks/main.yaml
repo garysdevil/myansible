@@ -1,0 +1,17 @@
+- name: Install ntp
+  yum:
+    name: "ntp"
+
+# - name: Copy ntp.conf file
+#   ansible.builtin.copy:
+#     src: ../files/ntp.conf
+#     dest: /etc/ntp.conf
+#     owner: root
+#     group: root
+#     mode: '0644'
+
+- name: Start ntp
+  ansible.builtin.systemd: 
+    name: ntpd
+    enabled: yes
+    state: started

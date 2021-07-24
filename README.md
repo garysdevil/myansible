@@ -3,9 +3,9 @@
 ## Run
 ```bash
 cp playbooks.yaml local.playbooks.yaml
-cp hosts local.hosts
+cp hosts.conf local.hosts.conf
 
-ansible-playbook -i ./local.hosts local.playbooks.yaml
+ansible-playbook -i ./local.hosts.conf local.playbooks.yaml
 ```
 
 

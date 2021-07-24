@@ -1,2 +1,13 @@
 - name: Ping
   ansible.builtin.ping:
+
+# - name: Change timezone to Hong_Kong
+#   ansible.builtin.command: ln -sf /usr/share/zoneinfo/Asia/Hong_Konga /etc/localtime
+#   become: yes
+
+- name: Change timezone to Hong_Kong
+  ansible.builtin.file: 
+    src: /usr/share/zoneinfo/Asia/Hong_Kong
+    dest: /etc/localtime
+    state: link
+  become: yes

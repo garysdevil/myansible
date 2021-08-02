@@ -11,15 +11,15 @@
   lineinfile:
     path: /etc/zabbix/zabbix_agentd.conf
     state: present
-    regexp: 'Hostname=Zabbix server'
-    line: "Hostname={{ 等待更新 }}"
+    regexp: '^Hostname=Zabbix server'
+    line: "Hostname={{ inventory_hostname }}"
   become: yes
     
 - name: change zabbix_agentd.conf ServerActive
   lineinfile:
     path: /etc/zabbix/zabbix_agentd.conf
     state: present
-    regexp: 'ServerActive=127.0.0.1'
+    regexp: '^ServerActive=127.0.0.1'
     line: "ServerActive={{ zabbix_server_ip }}"
   become: yes
 

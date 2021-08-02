@@ -7,3 +7,6 @@
   become: true
   roles:
     - 0.prepare
+  # tasks:
+  #   - name: debug
+  #     shell: pwd

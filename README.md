@@ -32,6 +32,7 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=ansible_all_ipv4
 
 2. lineinfile
     - 替换操作，默认只会替换文件内最后一个符合正则表达式内容的语句
+    - 如果找不到被匹配的字符串，则会添加新的内容
     ```yaml
     - name: update_etc_hosts
         lineinfile:

@@ -1,12 +1,25 @@
-- name: Init
+- name: Init machine
   hosts: {{ group }}
-  gather_facts: no
+  gather_facts: yes
   vars:
-    zabbix_server_ip: {{ zabbix_server_ip }}
     test_IP: "{{ ansible_eth0['ipv4']['address'] }}"
   become: true
   roles:
     - 0.prepare
   # tasks:
-  #   - name: debug
+  #   - name: debug1
+  #     debug: var=test_IP
+  
+  #   - name: debug2
   #     shell: pwd
+  #     register: result
+  #   - debug: var=result
+
+- name: Install monitor
+  hosts: {{ group }}
+  gather_facts: no
+  vars_files:
+    - "vars/zabbix.yaml"
+  become: true
+  roles:
+    - zabbix-agent

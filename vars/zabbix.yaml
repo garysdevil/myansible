@@ -1,0 +1,6 @@
+---
+# zabbix-agent的Hostname名称
+zabbix_agent_hostname: "{{ inventory_hostname }}"
+
+# zabbix-server服务器的IP
+zabbix_server_ip: 127.0.0.1

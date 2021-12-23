@@ -33,3 +33,10 @@
     enabled: yes
     state: restarted
 
+- name: Checking zabbix-agent2 service status
+  shell: ps -ef | grep zabbix_agent2 | grep -v "grep" | awk '{print $2}'
+  register: result
+
+# - name: showing report
+#   debug:
+#     var: result.rc

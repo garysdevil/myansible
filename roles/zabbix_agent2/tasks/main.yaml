@@ -1,33 +1,33 @@
-- name: Stop zabbix_agent
+- name: Stop zabbix_agent service
   ignore_errors: yes
   systemd: 
     name: "zabbix-agent"
     enabled: no
     state: stopped
 
-- name: Check if zabbix-agent2 package is installed
-  command: dpkg-query -W zabbix-agent2
-  register: zabbix_agent2_check_result # 执行返回结果赋值给zabbix_agent2_check_result变量，执行返回结果是json对象
-  failed_when: zabbix_agent2_check_result.rc > 1 # zabbix_agent2_check_result.rc等于0表示执行成功
-  changed_when: zabbix_agent2_check_result.rc == 1
-- name: Download zabbix5.0 package
-  get_url: 
-    url=https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+focal_all.deb
-    dest="/tmp/zabbix-release_5.0-1+focal_all.deb"
-  when: zabbix_agent2_check_result.rc == 1
-- name: Install zabbix5.0 package
-  apt: deb="/tmp/zabbix-release_5.0-1+focal_all.deb"
-  when: zabbix_agent2_check_result.rc == 1
+- name: "Install zabbix-agent2 service in ubuntu16 or ubuntu20"
+  include: ./roles/zabbix_agent2/tasks/ubuntu16or20.yaml
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    # - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_major_version'] == "20" or ansible_facts['distribution_major_version'] == "16"
 
-- name: Install zabbi-agent2 Service
-  apt:
-    name: zabbix-agent2
-    state: present
+- name: "Install zabbix-agent2 service in centos7"
+  include: ./roles/zabbix_agent2/tasks/centos7.yaml
+  when:
+    - ansible_facts['os_family'] == "CentOS"
+    - ansible_facts['distribution_major_version'] == "7"
 
 - name: Config zabbix_agent2.conf
-  template: src=./files/zabbix_agent2.conf.j2 dest=/etc/zabbix/zabbix_agent2.conf
+#   template: src=./files/zabbix_agent2.conf.j2 dest=/etc/zabbix/zabbix_agent2.conf
+  template:
+    src: ./files/zabbix_agent2.conf.j2
+    dest: /etc/zabbix/zabbix_agent2.conf
+    owner: root
+    group: root
+    mode: '0644'
 
-- name: Start zabbix_agent2 Service
+- name: Start zabbix_agent2 service
   systemd: 
     name: "zabbix-agent2"
     enabled: yes

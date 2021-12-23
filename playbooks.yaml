@@ -2,13 +2,14 @@
   hosts: {{ group }}
   gather_facts: yes
   vars:
-    test_IP: "{{ ansible_eth0['ipv4']['address'] }}"
+    zabbix_agent_hostname: "{{ ansible_eno2['ipv4']['address'] }}"
   become: true
   roles:
     - 0.prepare
+    - zabbix_agent2
   # tasks:
   #   - name: debug1
-  #     debug: var=test_IP
+  #     debug: var=zabbix_agent_hostname
   
   #   - name: debug2
   #     shell: pwd

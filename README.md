@@ -44,6 +44,30 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=ansible_all_ipv4
     ```
 
 ### Jinja
+- jinja2 文件以 .j2 为后缀， 也可以不写后缀。
+- jinja2 中存在 三种定界符
+```
+# 注释:    
+{# #}
+
+# 变量引用:  
+{{}}
+
+# 逻辑表达:  
+{%%}
+
+# 条件语句
+{% if %}
+...
+...
+{% endif %}
+
+# 循环
+{% for %}
+...
+...
+{% endfor %}
+```
 
 ## AsAnInterviewer
 - 考察面试者是否使用过ansible，是否编写过ansible，对ansible的编写是否熟练。

@@ -69,6 +69,14 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=ansible_all_ipv4
 {% endfor %}
 ```
 
+### ansible.cfg
+- ansible.cfg配置文件位置
+    - ANSIBLE_CONFIG   如果设置了该环境变量，则使用该环境变量指向的配置文件
+    - ./ansible.cfg    在当前目录中搜索配置文件
+    - ~/.ansible.cfg   在当前用户的home目录下的配置文件
+    - /etc/ansible/ansible.cfg  ansible默认的配置文件
+    - 从上到下，优先级递减
+
 ## AsAnInterviewer
 - 考察面试者是否使用过ansible，是否编写过ansible，对ansible的编写是否熟练。
 

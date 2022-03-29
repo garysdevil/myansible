@@ -1,0 +1,6 @@
+- name: Change timezone to Hong_Kong
+  ansible.builtin.file: 
+    src: /usr/share/zoneinfo/Asia/Hong_Kong
+    dest: /etc/localtime
+    state: link
+  become: yes

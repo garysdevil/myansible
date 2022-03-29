@@ -1,13 +1,18 @@
+- name: Ping
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+
 - name: Start
   hosts: {{ group }}
-  gather_facts: yes
-
+  gather_facts: no
   become: true
   roles:
     - zabbix_agent2
   tasks:
-    - name: Ping
-      ansible.builtin.ping:
     # - name: debug2
     #   shell: pwd
     #   register: result

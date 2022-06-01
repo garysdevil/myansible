@@ -10,6 +10,11 @@
   hosts: {{ group }}
   gather_facts: no
   become: true
+  environment:
+    # 设置代理
+    no_proxy: localhost,127.0.0.1
+    http_proxy: 127.0.0.1:1081
+    https_proxy: 127.0.0.1:1081
   roles:
     - zabbix_agent2
   tasks:
@@ -23,7 +28,7 @@
 #   hosts: {{ group }}
 #   gather_facts: yes
 #   # vars:
-#   #   zabbix_agent_hostname: "{{ ansible_eno2['ipv4']['address'] }}"
+#   #   zabbix_agent_hostname: "{{ ansible_eno2['ipv4']['address'] }}" # 网卡是不确定的
 #   vars_files:
 #     - "vars/zabbix.yaml"
 #   become: true

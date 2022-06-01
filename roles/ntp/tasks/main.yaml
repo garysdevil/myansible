@@ -1,4 +1,4 @@
-- name: Install ntp
+- name: Install ntp in Centos
   yum:
     name: "ntp"
   when:
@@ -12,8 +12,16 @@
 #     group: root
 #     mode: '0644'
 
+- name: Install ntp  in Ubuntu
+  apt:
+    name: "ntp"
+  when:
+  - ansible_facts['os_family'] == "Debian"
+
+
 - name: Start ntp
   ansible.builtin.systemd: 
-    name: ntpd
+    # name: ntpd
+    name: ntp
     enabled: yes
     state: started

@@ -1,5 +1,5 @@
 - name: Stop zabbix_agent service
-  ignore_errors: yes
+  ignore_errors: true
   systemd: 
     name: "zabbix-agent"
     enabled: no

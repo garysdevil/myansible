@@ -13,3 +13,8 @@ Hostname={{zabbix_agent_hostname}}
 Include=/etc/zabbix/zabbix_agent2.d/*.conf
 
 ControlSocket=/tmp/agent.sock
+
+# Timeout默认为3秒，即agent的线程在进行处理时，超过3秒即为超时
+Timeout=9 
+# RefreshActiveChecks默认为120秒
+RefreshActiveChecks=300 

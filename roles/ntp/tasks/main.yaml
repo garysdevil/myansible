@@ -19,9 +19,8 @@
   - ansible_facts['os_family'] == "Debian"
 
 
-- name: Start ntp
+- name: Start ntpd service
   ansible.builtin.systemd: 
-    # name: ntpd
-    name: ntp
+    name: ntpd
     enabled: yes
     state: started

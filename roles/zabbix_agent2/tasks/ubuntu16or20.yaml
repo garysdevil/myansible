@@ -1,3 +1,9 @@
+- name: Uninstall zabbix-agent in Ubuntu
+  apt: 
+    name: "zabbix-agent"
+    state: "absent"
+    purge: yes
+
 - name: Check if zabbix-agent2 package is installed
   command: dpkg-query -W zabbix-agent2
   register: zabbix_agent2_check_result # 执行返回结果赋值给zabbix_agent2_check_result变量，执行返回结果是json对象
@@ -17,12 +23,19 @@
   apt: deb="/tmp/zabbix-release_5.0-1+focal_all.deb"
   when: zabbix_agent2_check_result.rc == 1
 
-
 - name: Install zabbi-agent2 service
   apt:
     name: zabbix-agent2
     state: present
 
-# - name: "Install zabbix-agent2 service successfully"
-#   set_fact:
-#     install_zabbix_agent2_success: true
+- name: Install sysstat tool in Ubuntu
+  apt:
+    name: "sysstat"
+
+- name: Scp items configuration
+  template:
+    src: ./files/ubuntu20.conf
+    dest: /etc/zabbix/zabbix_agent2.d/ubuntu20.conf
+    owner: root
+    group: root
+    mode: '0644'

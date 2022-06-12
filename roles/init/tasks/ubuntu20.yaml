@@ -1,0 +1,10 @@
+- name: Update repositories cache and update all packages to their latest version
+  apt:
+    name: "*"
+    update_cache: yes
+    state: latest
+
+
+- name: Upgrade the OS (apt-get dist-upgrade)
+  apt:
+    upgrade: dist

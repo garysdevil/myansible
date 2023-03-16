@@ -6,6 +6,10 @@ cp playbooks.yaml local.playbooks.yaml
 cp hosts.conf local.hosts.conf
 
 ansible-playbook -i ./local.hosts.conf local.playbooks.yaml
+# 或
+# ansible-playbook e33_var_in_command.yml --extra-vars "@local.zabbix.json"
+# 或
+# ansible-playbook -i ./local.hosts.conf local.playbooks.yaml --extra-vars "zabbix_server_ip=127.0.0.1"
 ```
 ## 配置
 - /etc/ansible/ansible.cfg

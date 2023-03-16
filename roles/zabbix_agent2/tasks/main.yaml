@@ -8,8 +8,7 @@
 - name: "Install zabbix-agent2 service in ubuntu16 or ubuntu20"
   include: ./roles/zabbix_agent2/tasks/ubuntu16or20.yaml
   when:
-    - ansible_facts['os_family'] == "Debian"
-    # - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['os_family'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     - ansible_facts['distribution_major_version'] == "20" or ansible_facts['distribution_major_version'] == "16"
 
 - name: "Install zabbix-agent2 service in centos7 or RedHat"

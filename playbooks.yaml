@@ -1,20 +1,20 @@
 - name: Ping
   hosts: all
-  gather_facts: no
+  gather_facts: false
   tasks:
     - name: Ping
       ansible.builtin.ping:
 
 
 - name: Start
-  hosts: {{ group }}
-  gather_facts: no
+  hosts: group_1
+  gather_facts: false
   become: true
   environment:
     # 设置代理
     no_proxy: localhost,127.0.0.1
-    http_proxy: 127.0.0.1:1081
-    https_proxy: 127.0.0.1:1081
+    # http_proxy: 127.0.0.1:1081
+    # https_proxy: 127.0.0.1:1081
   roles:
     - zabbix_agent2
   tasks:
@@ -22,7 +22,7 @@
     #   shell: pwd
     #   register: result
     # - debug: var=result
-    
+
 
 # - name: Install monitor
 #   hosts: {{ group }}

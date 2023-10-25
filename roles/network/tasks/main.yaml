@@ -1,0 +1,5 @@
+- name: 替换 Ubuntu 22 主机的网络配置
+  include: ./roles/network/tasks/ubuntu22.yaml
+  when:
+    - ansible_facts['os_family'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_major_version'] == "22"

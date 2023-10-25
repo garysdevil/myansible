@@ -1,0 +1,2 @@
+- name: Apply new network config
+  shell: netplan apply

@@ -4,7 +4,9 @@
   tasks:
     - name: Ping
       ansible.builtin.ping:
-
+    # - name: Print all available facts
+    #   ansible.builtin.debug:
+    #     var: ansible_facts
 
 - name: Start
   hosts: group_1

@@ -1,0 +1,29 @@
+network:
+  version: 2
+  ethernets:
+    eth0:
+      match:
+        macaddress: {{eth0_mac_address}}
+      set-name: eth0
+      addresses:
+      - {{eth0_ip_address}}/25
+      #gateway4: 1111.111.111.1
+      nameservers:
+        addresses: [114.114.114.114, ${其它DNS地址}]
+      #routes:
+      #- to: default
+      #  via: 111.111.111.1
+    eth1:
+      match:
+        macaddress: {{eth1_mac_address}}
+      set-name: eth1
+      addresses:
+      - {{eth1_ip_address}}/24
+      routes:
+      - to: default
+        via: ${路由地址}        
+
+# macaddress: {{eth0_mac_address}} # eth0.macaddress
+# {{eth0_ip_address}}/25 # eth0.ipv4.address
+# macaddress: {{eth0_mac_address}} # eth1.macaddress
+# {{eth0_ip_address}}/25 # eth1.ipv4.address

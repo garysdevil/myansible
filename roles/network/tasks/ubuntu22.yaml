@@ -1,0 +1,16 @@
+---
+- name: 备份原网络配置文件
+  command: cp /etc/netplan/network-config.yaml /etc/netplan/network-config.yaml.bak
+  ignore_errors: true  # 忽略文件不存在的错误
+
+- name: 生成网络配置文件 #替换eth0和eth1网卡的配置
+  template:
+    src: ./roles/network/templates/ubuntu22_network-config.j2  # 你的 Jinja2 模板文件的本地路径
+    dest: /etc/netplan/network-config.yaml
+  vars:
+    eth0_mac_address: "{{ ansible_facts['eth0']['macaddress'] }}"  # 获取主机eth0的 MAC 地址
+    eth0_ip_address: "{{ ansible_facts['eth0']['ipv4']['address'] }}"  # 获取主机eth0的 IP 地址
+    eth1_mac_address: "{{ ansible_facts['eth1']['macaddress'] }}"  # 获取主机eth1的 MAC 地址
+    eth1_ip_address: "{{ ansible_facts['eth1']['ipv4']['address'] }}"  # 获取主机eth1的 IP 地址
+  notify:
+    - Apply new network config

@@ -6,6 +6,26 @@ ansible -i ./local.hosts.conf ${group_name} -m setup
 ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_addresses'
 ```
 
+### ansible-playbook
+```bash
+# 在每个任务前会自动停止,并询问是否应该执行该任务.
+--step
+
+# 从指定的任务开始执行playbook
+--start-at="install packages"
+
+# 通过指定tags执行部分功能
+--tags "packages"
+# 所有有tag的任务
+--tags tagged
+# 所有没有tag的任务
+--tags untagged
+
+# 通过指定tags不执行部分功能
+--skip-tags "configuration"
+```
+
+
 ### module
 - 注意点讲解
 
@@ -31,6 +51,12 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_address
         regexp: ' garys.top'
         line: "{{ ip }}  garys.top"
         become: yes
+    ```
+
+3. script 将脚本传入远程主机并且执行
+    ```yaml
+        - name: Execute your script
+        script: ./local/test.sh
     ```
 
 ### Jinja

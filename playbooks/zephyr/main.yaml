@@ -3,8 +3,6 @@
   become: true
   gather_facts: false
   tasks:
-    - name: Ping
-      ansible.builtin.ping:
     - name: Creates directory
       ansible.builtin.file:
         path: /opt/zephyr
@@ -12,14 +10,14 @@
         mode: '0744'
     - name: Scp xmrig
       ansible.builtin.copy:
-        src: ./scrypts/localxmrig
+        src: ./files/local_xmrig
         dest: /opt/zephyr/xmrig
         owner: root
         group: root
         mode: '0744'
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./scrypts/gary_run.sh
+        src: ./files/gary_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root
@@ -38,14 +36,10 @@
       async: 10 # 最长等待10秒返回
       poll: 0 # 值为0表示无需等待该任务返回
       tags:
-        - runminer
+        - startminer
       when: xmrig_process.rc != 0
     - name: Stop xmrig
       shell: killall xmrig
       when: xmrig_process.rc == 0
       tags:
         - stopminer
-
-# 准备，然后启动 ansible-playbook -i ./local.hosts.conf local.playbooks.yaml --skip-tags "stopminer"
-# 启动 ansible-playbook -i ./local.hosts.conf local.playbooks.yaml --tags "runminer"
-# 停止 ansible-playbook -i ./local.hosts.conf local.playbooks.yaml --tags "stopminer"

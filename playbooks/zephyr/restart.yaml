@@ -1,0 +1,22 @@
+- name: zephyr_xmrig_restart
+  hosts: test
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./scrypts/gary_run.sh
+        dest: /opt/zephyr/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Stop xmrig
+      shell: killall xmrig
+      ignore_errors: yes
+    - name: Run xmrig
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/zephyr/
+      async: 10 # 最长等待10秒返回
+      poll: 0 # 值为0表示无需等待该任务返回

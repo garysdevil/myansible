@@ -23,6 +23,9 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_address
 
 # 通过指定tags不执行部分功能
 --skip-tags "configuration"
+
+# 指定并发数量
+-f 10
 ```
 
 
@@ -58,6 +61,14 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_address
         - name: Execute your script
         script: ./local/test.sh
     ```
+
+4. async 和 poll
+```yaml
+    - name: Run updatedb
+        command: /usr/bin/updatedb
+        async: 300 # async的值是ansible等待运行这个任务的最大超时值
+        poll: 10 # poll就是ansible检查这个任务是否完成的频率时间
+```
 
 ### Jinja
 - jinja2 文件以 .j2 为后缀， 也可以不写后缀。

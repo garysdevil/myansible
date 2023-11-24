@@ -5,7 +5,7 @@
   tasks:
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./scrypts/gary_run.sh
+        src: ./files/gary_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root

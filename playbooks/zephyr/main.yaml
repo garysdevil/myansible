@@ -10,14 +10,14 @@
         mode: '0744'
     - name: Scp xmrig
       ansible.builtin.copy:
-        src: ./files/local_xmrig
+        src: ./files/local_xmrig # https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-x64.tar.gz
         dest: /opt/zephyr/xmrig
         owner: root
         group: root
         mode: '0744'
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./files/gary_run.sh
+        src: ./files/gary_zhph_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root

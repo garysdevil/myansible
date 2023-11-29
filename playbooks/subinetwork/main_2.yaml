@@ -1,0 +1,39 @@
+- name: subi_xmrig_tasks
+  hosts: test
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./files/gary_subi_run.sh
+        dest: /opt/subi/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+      tags:
+        - restart
+    - name: Stop xmrig
+      shell: killall xmrig_subi
+      ignore_errors: yes
+      tags:
+        - restart
+    - name: Run xmrig
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/subi/
+      async: 10 # 最长等待10秒返回
+      poll: 0 # 值为0表示无需等待该任务返回
+      tags:
+        - restart
+
+    - name: Get powlog content
+      shell: tail /opt/subi/xmrig_subi.log -n 100 | grep "10s/60s/15m"
+      register: powlog
+      tags:
+        - powlog
+    - name: Display powlog content
+      ansible.builtin.debug:
+        msg: "{{ powlog.stdout_lines }}"
+      tags:
+        - powlog

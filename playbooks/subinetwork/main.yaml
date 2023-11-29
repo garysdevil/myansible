@@ -1,0 +1,45 @@
+- name: subi_xmrig
+  hosts: test
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/subi
+        state: directory
+        mode: '0744'
+    - name: Scp xmrig_subi
+      ansible.builtin.copy:
+        src: ./files/local_xmrig
+        dest: /opt/subi/xmrig_subi
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./files/gary_subi_run.sh
+        dest: /opt/subi/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Check xmrig_subi process
+      shell: ps aux | grep 'xmrig_subi' | grep -v grep
+      register: xmrig_subi_process
+      ignore_errors: yes
+      tags:
+        - always
+    - name: Run xmrig_subi
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/subi/
+      async: 10 # 最长等待10秒返回
+      poll: 0 # 值为0表示无需等待该任务返回
+      tags:
+        - startminer
+      when: xmrig_subi_process.rc != 0
+    - name: Stop xmrig_subi
+      shell: killall xmrig_subi
+      when: xmrig_subi_process.rc == 0
+      tags:
+        - stopminer

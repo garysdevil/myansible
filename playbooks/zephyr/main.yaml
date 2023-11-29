@@ -17,7 +17,7 @@
         mode: '0744'
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./files/gary_zhph_run.sh
+        src: ./files/gary_zeph_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root

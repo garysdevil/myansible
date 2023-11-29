@@ -5,14 +5,18 @@
   tasks:
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./files/gary_zhph_run.sh
+        src: ./files/gary_zeph_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root
         mode: '0744'
+      tags:
+        - restart
     - name: Stop xmrig
       shell: killall xmrig
       ignore_errors: yes
+      tags:
+        - restart
     - name: Run xmrig
       shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
       # shell: "( ./run.sh > /dev/null 2>&1 &)"
@@ -20,3 +24,16 @@
         chdir: /opt/zephyr/
       async: 10 # 最长等待10秒返回
       poll: 0 # 值为0表示无需等待该任务返回
+      tags:
+        - restart
+
+    - name: Get powlog content
+      shell: tail /opt/zeph/xmrig_zeph.log -n 100 | grep "10s/60s/15m"
+      register: powlog
+      tags:
+        - powlog
+    - name: Display powlog content
+      ansible.builtin.debug:
+        msg: "{{ powlog.stdout_lines }}"
+      tags:
+        - powlog

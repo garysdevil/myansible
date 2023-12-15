@@ -5,7 +5,7 @@
 ansible-playbook -i ./local.hosts.conf main.yaml --skip-tags "stopminer"
 
 # 启动未启动的
-ansible-playbook -i ./local.hosts.conf main.yaml --tags "startminer"
+ansible-playbook -i ./local.hosts.conf main.yaml --tags "startminer" -e ansible_ssh_timeout=30
 
 # 停止未停止的 
 ansible-playbook -i ./local.hosts.conf main.yaml --tags "stopminer"

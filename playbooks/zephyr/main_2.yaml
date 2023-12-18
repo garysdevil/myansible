@@ -28,7 +28,7 @@
         - restart
 
     - name: Get powlog content
-      shell: tail /opt/zeph/xmrig_zeph.log -n 100 | grep "10s/60s/15m"
+      shell: tail /opt/zephyr/xmrig_zephyr.log -n 100 | grep "10s/60s/15m"
       register: powlog
       tags:
         - powlog

@@ -5,7 +5,7 @@
   tasks:
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./files/local_run.sh
+        src: ./files/local_bell_run.sh
         dest: /opt/bellcoin/run.sh
         owner: root
         group: root

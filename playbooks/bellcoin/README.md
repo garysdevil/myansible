@@ -1,8 +1,8 @@
 ## zephyr
 ```bash
 # 拷贝文件修改配置
-mv gary_run.sh local_run.sh
-vim local_run.sh
+mv gary_bell_run.sh local_bell_run.sh
+vim local_bell_run.sh
 ```
 ```bash
 # 首次部署执行

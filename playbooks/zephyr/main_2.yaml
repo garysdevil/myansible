@@ -1,11 +1,11 @@
 - name: zephyr_xmrig_restart
-  hosts: test
+  hosts: "{{ hosts }}"
   become: true
   gather_facts: false
   tasks:
     - name: Scp run.sh
       ansible.builtin.copy:
-        src: ./files/gary_zeph_run.sh
+        src: ./files/local_zeph_run.sh
         dest: /opt/zephyr/run.sh
         owner: root
         group: root

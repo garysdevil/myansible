@@ -1,0 +1,45 @@
+- name: bellcoin_minerd
+  hosts: "{{ hosts }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/bellcoin
+        state: directory
+        mode: '0744'
+    - name: Scp minerd
+      ansible.builtin.copy:
+        src: ./files/local_minerd
+        dest: /opt/bellcoin/minerd
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./files/local_run.sh
+        dest: /opt/bellcoin/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Check minerd process
+      shell: ps aux | grep 'minerd' | grep -v grep
+      register: minerd_process
+      ignore_errors: yes
+      tags:
+        - always
+    - name: Run minerd
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/bellcoin/
+      async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
+      poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
+      tags:
+        - startminer
+      when: minerd_process.rc != 0
+    - name: Stop minerd
+      shell: killall minerd
+      when: minerd_process.rc == 0
+      tags:
+        - stopminer

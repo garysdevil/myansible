@@ -1,0 +1,39 @@
+- name: bellcoin_minerd_restart
+  hosts: "{{ hosts }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./files/local_run.sh
+        dest: /opt/bellcoin/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+      tags:
+        - restart
+    - name: Stop minerd
+      shell: killall minerd
+      ignore_errors: yes
+      tags:
+        - restart
+    - name: Run minerd
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/bellcoin/
+      async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
+      poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
+      tags:
+        - restart
+
+    - name: Get powlog content
+      shell: tail /opt/bellcoin/minerd_bellcoin.log
+      register: powlog
+      tags:
+        - powlog
+    - name: Display powlog content
+      ansible.builtin.debug:
+        msg: "{{ powlog.stdout_lines }}"
+      tags:
+        - powlog

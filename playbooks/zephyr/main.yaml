@@ -33,8 +33,8 @@
       # shell: "( ./run.sh > /dev/null 2>&1 &)"
       args:
         chdir: /opt/zephyr/
-      async: 10 # 最长等待10秒返回
-      poll: 0 # 值为0表示无需等待该任务返回
+      async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
+      poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
       tags:
         - startminer
       when: xmrig_process.rc != 0

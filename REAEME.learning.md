@@ -26,6 +26,9 @@ ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_address
 
 # 指定并发数量
 -f 10
+
+# Ansible 连接到远程主机时等待 SSH 连接建立的最长时间，默认值为10秒
+-e ansible_ssh_timeout=30
 ```
 
 

@@ -1,14 +1,17 @@
 ## zephyr
 ```bash
-# 拷贝文件修改配置
+# 首次部署：
+# 1. 拷贝文件修改启动配置 钱包地址等信息
 mv gary_zeph_run.sh local_zeph_run.sh
-vim local_bell_run.sh
-```
-```bash
-# 首次部署执行
-# 配置，启动 
-ansible-playbook -i ./local.hosts.conf main.yaml --skip-tags "stopminer" -e "hosts=all"
+vim local_zeph_run.sh
+# 2. 创建 inventory 文件
+vim local.hosts.conf
 
+# 3. 远程传递配置文件，启动 
+ansible-playbook -i ./local.hosts.conf main.yaml --skip-tags "stopminer" -e "hosts=all"
+```
+
+```bash
 # 启动未启动的
 ansible-playbook -i ./local.hosts.conf main.yaml --tags "startminer" -e "hosts=all"
 
@@ -19,6 +22,6 @@ ansible-playbook -i ./local.hosts.conf main.yaml --tags "stopminer" -e "hosts=al
 # 查看日志
 ansible-playbook -i ./local.hosts.conf main_2.yaml --tags "powlog" -e "hosts=all"
 
-# 更新配置，重启 
+# 远程更新配置文件，重启 
 ansible-playbook -i ./local.hosts.conf main_2.yaml --tags "restart" -e "hosts=all"
 ```

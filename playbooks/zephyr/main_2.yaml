@@ -1,4 +1,4 @@
-- name: zephyr_xmrig_restart
+- name: zephyr_xmrig_2
   hosts: "{{ hosts }}"
   become: true
   gather_facts: false

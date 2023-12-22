@@ -1,4 +1,4 @@
-- name: bellcoin_minerd_restart
+- name: bellcoin_minerd_2
   hosts: "{{ hosts }}"
   become: true
   gather_facts: false

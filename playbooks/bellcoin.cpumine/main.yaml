@@ -1,0 +1,45 @@
+- name: bellcoin_cpumine
+  hosts: "{{ hosts }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/bellcoin
+        state: directory
+        mode: '0744'
+    - name: Scp cpumine
+      ansible.builtin.copy:
+        src: ./files/local_cpumine
+        dest: /opt/bellcoin/cpumine
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Scp run.sh
+      ansible.builtin.copy:
+        src: ./files/local_bell_run.sh
+        dest: /opt/bellcoin/run.sh
+        owner: root
+        group: root
+        mode: '0744'
+    - name: Check cpumine process
+      shell: ps aux | grep 'cpumine' | grep -v grep
+      register: cpumine_process
+      ignore_errors: yes
+      tags:
+        - always
+    - name: Run cpumine
+      shell: "( ./run.sh {{ ansible_ssh_host }} > /dev/null 2>&1 &)"
+      # shell: "( ./run.sh > /dev/null 2>&1 &)"
+      args:
+        chdir: /opt/bellcoin/
+      async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
+      poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
+      tags:
+        - startminer
+      when: cpumine_process.rc != 0
+    - name: Stop cpumine
+      shell: killall cpumine
+      when: cpumine_process.rc == 0
+      tags:
+        - stopminer

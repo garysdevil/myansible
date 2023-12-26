@@ -1,4 +1,5 @@
 ## Learning
+### ansible
 ```bash
 # 输出远程服务器的所有facts信息 ansible.builtin.setup
 ansible -i ./local.hosts.conf ${group_name} -m setup
@@ -6,7 +7,7 @@ ansible -i ./local.hosts.conf ${group_name} -m setup
 ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_addresses'
 ```
 
-### ansible-playbook
+### ansible-playbook参数
 ```bash
 # 在每个任务前会自动停止,并询问是否应该执行该任务.
 --step

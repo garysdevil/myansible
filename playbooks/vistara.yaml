@@ -1,0 +1,62 @@
+- name: vistara
+  hosts: "{{ hosts }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/vistara
+        state: directory
+        mode: '0744'
+      tags:
+        - deploy
+    - name: Download vimana
+      shell: "curl -L https://vistara-labs.github.io/vimana/install.sh | bash"
+      args:
+        chdir: /opt/vistara
+      tags:
+        - deploy
+    - name: init vimana
+      shell: "echo Y| vimana init"
+      args:
+        chdir: /opt/vistara
+      tags:
+        - deploy
+    - name: Check vimana process
+      shell: ps aux | grep 'vimana' | grep -v grep
+      register: vimana_process
+      ignore_errors: yes
+      tags:
+        - start
+        - stop
+    - name: Start vimana
+      shell: nohup vimana run celestia light-node >> /opt/vistara/light-node.log 2>&1 &
+      when: vimana_process.rc == 1
+      args:
+        chdir: /opt/vistara
+      tags:
+        - start
+    - name: Stop vimana
+      shell: killall vimana
+      when: vimana_process.rc == 0
+      tags:
+        - stop
+
+    - name: Get log content
+      shell: tail -n20 /opt/vistara/light-node.log
+      register: nodelog
+      tags:
+        - log
+    - name: Display log content
+      ansible.builtin.debug:
+        msg: "{{ nodelog.stdout_lines }}"
+      tags:
+        - log
+
+# 部署 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "deploy" -e "hosts=all"
+
+# 启动 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "start" -e "hosts=all"
+
+# 启动 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "log" -e "hosts=all"
+
+# /tmp/vimana/celestia/celestia

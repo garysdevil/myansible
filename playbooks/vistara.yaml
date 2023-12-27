@@ -10,12 +10,28 @@
         mode: '0744'
       tags:
         - deploy
-    - name: Download vimana
-      shell: "curl -L https://vistara-labs.github.io/vimana/install.sh | bash"
-      args:
-        chdir: /opt/vistara
+    - name: Copy and Unarchive the copied file on remote host
+      unarchive:
+        src: "./vistaratar.tar.gz"  # ansible主机上的文件路径
+        dest: "/opt/vistara/"  # 解压目标目录
       tags:
         - deploy
+    - name: Deploy vimana
+      shell: "bash gary_install.sh && /tmp/vimana/celestia/init.sh"
+      args:
+        chdir: /opt/vistara/vistaratar
+      tags:
+        - deploy
+    # - name: Download install.sh 
+    #   get_url: 
+    #     url: https://vistara-labs.github.io/vimana/install.sh
+    #     dest: /opt/vistara/install.sh
+    # - name: Deploy vimana
+    #   shell: "bash install.sh "
+    #   args:
+    #     chdir: /opt/vistara
+    #   tags:
+    #     - deploy
     - name: init vimana
       shell: "echo Y| vimana init"
       args:
@@ -57,6 +73,6 @@
 
 # 启动 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "start" -e "hosts=all"
 
-# 启动 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "log" -e "hosts=all"
+# 看日志 ansible-playbook -i ./local.hosts.conf vistara.yaml --tags "log" -e "hosts=all"
 
 # /tmp/vimana/celestia/celestia

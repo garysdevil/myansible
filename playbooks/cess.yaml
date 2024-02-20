@@ -1,0 +1,50 @@
+- name: cess
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/cess
+        state: directory
+        mode: '0744'
+    - name: Scp image
+      unarchive:
+        src: ./files/cessimage.tar.gz
+        dest: /opt/cess/
+    - name: Scp script
+      unarchive:
+        src: ./files/v0.5.4.tar.gz
+        dest: /opt/cess/
+    - name: Scp yq
+      ansible.builtin.copy:
+        src: ./files/yq
+        dest: /usr/bin/yq
+        owner: root
+        group: root
+        mode: '0744'
+    - name: fix 
+      ansible.builtin.copy:
+        src: ./files/add.sh
+        dest: /tmp/add.sh
+        owner: root
+        group: root
+        mode: '0744'
+    # - name: check disk
+    #   shell: "df -hT | grep data | grep -v 100%"
+    #   register: output
+    # - name: Display output
+    #   ansible.builtin.debug:
+    #     msg: "{{ output.stdout_lines }}"
+    - name: add.sh
+      shell: "bash /tmp/add.sh"
+    - name: install
+      shell: "./install.sh"
+      args:
+        chdir: /opt/cess/cess-nodeadm-0.5.4
+    - name: install
+      shell: "cess profile testnet"
+
+
+# ansible-playbook -i ./local.hosts.conf main.yaml 
+

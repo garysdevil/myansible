@@ -1,5 +1,5 @@
 - name: cess
-  hosts: test
+  hosts: all
   become: true
   gather_facts: false
   tasks:
@@ -61,7 +61,7 @@
     #   ansible.builtin.debug:
     #     msg: "{{ output.stdout_lines }}"
     - name: docker ps
-      shell: "docker ps"
+      shell: "cess status"
       register: output
       tags:
         - health
@@ -71,7 +71,7 @@
       tags:
         - health
     - name: log blockheight
-      shell: "docker logs -f -n10 chain"
+      shell: "docker logs -n10 chain"
       register: output
       tags:
         - blockheight
@@ -80,6 +80,17 @@
         msg: "{{ output.stdout_lines }}"
       tags:
         - blockheight
-
+    - name: cess bucket reward 
+      shell: "cess bucket reward"
+      register: output
+      tags:
+        - reward
+    - name: Display output
+      ansible.builtin.debug:
+        msg: "{{ output.stdout_lines }}"
+      tags:
+        - reward
 # ansible-playbook -i ./local.hosts.conf main.yaml 
 # ansible-playbook -i ./local.hosts.conf main.yaml --tags "health"
+# ansible-playbook -i ./local.hosts.conf main.yaml --tags "blockheight"
+# ansible-playbook -i ./local.hosts.conf main.yaml --tags "reward"

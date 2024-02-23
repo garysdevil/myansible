@@ -52,45 +52,11 @@
         chdir: /opt/cess/cess-nodeadm-0.5.4
     - name: cess profile testnet
       shell: "cess profile testnet"
-
-
     # - name: check disk
     #   shell: "df -hT | grep data | grep -v 100%"
     #   register: output
     # - name: Display output
     #   ansible.builtin.debug:
     #     msg: "{{ output.stdout_lines }}"
-    - name: docker ps
-      shell: "cess status"
-      register: output
-      tags:
-        - health
-    - name: Display output
-      ansible.builtin.debug:
-        msg: "{{ output.stdout_lines }}"
-      tags:
-        - health
-    - name: log blockheight
-      shell: "docker logs -n10 chain"
-      register: output
-      tags:
-        - blockheight
-    - name: Display output
-      ansible.builtin.debug:
-        msg: "{{ output.stdout_lines }}"
-      tags:
-        - blockheight
-    - name: cess bucket reward 
-      shell: "cess bucket reward"
-      register: output
-      tags:
-        - reward
-    - name: Display output
-      ansible.builtin.debug:
-        msg: "{{ output.stdout_lines }}"
-      tags:
-        - reward
+
 # ansible-playbook -i ./local.hosts.conf main.yaml 
-# ansible-playbook -i ./local.hosts.conf main.yaml --tags "health"
-# ansible-playbook -i ./local.hosts.conf main.yaml --tags "blockheight"
-# ansible-playbook -i ./local.hosts.conf main.yaml --tags "reward"

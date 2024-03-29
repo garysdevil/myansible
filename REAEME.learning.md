@@ -5,6 +5,8 @@
 ansible -i ./local.hosts.conf ${group_name} -m setup
 # facts信息过滤
 ansible -i ./local.hosts.conf ${group_name} -m setup -a 'filter=all_ipv4_addresses'
+# 使用shell模块
+ansible -i ./local.hosts.conf ${group_name} -m shell -a "df -hT | grep T"
 ```
 
 ### ansible-playbook参数

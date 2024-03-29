@@ -1,0 +1,36 @@
+- name: cess
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /opt/cess
+        state: directory
+        mode: '0744'
+    - name: Download tar file
+      ansible.builtin.get_url:
+        url: https://github.com/CESSProject/cess-nodeadm/archive/refs/tags/v0.5.5.tar.gz
+        dest: /opt/cess/v0.5.5.tar.gz
+    - name: Extract the tar file
+      ansible.builtin.unarchive:
+        src: /opt/cess/v0.5.5.tar.gz
+        dest: /opt/cess/
+        remote_src: yes
+        # extra_opts: [--strip-components=1] # 可选，根据需要使用
+    - name: cess install
+      shell: "./install.sh"
+      args:
+        chdir: /opt/cess/cess-nodeadm-0.5.5
+    - name: cess profile testnet
+      shell: "cess profile testnet"
+    - name: cess pullimg
+      shell: "cess pullimg"
+    # - name: check disk
+    #   shell: "df -hT | grep data | grep -v 100%"
+    #   register: output
+    # - name: Display output
+    #   ansible.builtin.debug:
+    #     msg: "{{ output.stdout_lines }}"
+
+# ansible-playbook -i ./local.hosts.conf main_online.yaml

@@ -1,0 +1,28 @@
+- name: mine
+  hosts: "{{ group }}"
+  vars_files:
+    - vars.yaml
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Check {{ mine_rig }} Process
+      shell: ps aux | grep '{{ mine_rig }}' | grep -v grep
+      register: mine_rig_status
+      ignore_errors: yes
+      tags:
+        - stopmine
+    - name: Stop {{ mine_rig }}
+      shell: killall {{ mine_rig }}
+      when: mine_rig_status.rc == 0
+      tags:
+        - stopmine
+    - name: Get Rig Log
+      shell: tail /opt/{{ mine_project }}/{{ mine_rig }}.log -n 50
+      register: rig_log
+      tags:
+        - checklog
+    - name: Display Rig Log
+      ansible.builtin.debug:
+        msg: "{{ rig_log.stdout_lines }}"
+      tags:
+        - checklog

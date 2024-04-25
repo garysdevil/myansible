@@ -1,0 +1,36 @@
+- name: mine
+  hosts: "{{ group }}"
+  vars_files:
+    - ./vars.yml
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Create Directory
+      ansible.builtin.file:
+        path: /opt/{{ mine_project }}
+        state: directory
+        mode: '0744'
+    - name: Scp Rig
+      ansible.builtin.copy:
+        src: ./{{ mine_rig }}
+        dest: /opt/{{ mine_project }}/
+        mode: '0744'
+    - name: Scp Run.sh
+      ansible.builtin.copy:
+        src: ./run.sh
+        dest: /opt/{{ mine_project }}/run.sh
+        mode: '0744'
+    - name: Check {{ mine_rig }} Process
+      shell: ps aux | grep '{{ mine_rig }}' | grep -v grep
+      register: mine_rig_status
+      ignore_errors: yes
+    - name: Display mine_rig_status
+      ansible.builtin.debug:
+        msg: "{{ mine_rig_status.stdout_lines }}"
+    - name: Run {{ mine_rig }}
+      shell: "./run.sh {{ ansible_ssh_host }}"
+      args:
+        chdir: /opt/{{ mine_project }}
+      async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
+      poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
+      when: mine_rig_status.rc != 0

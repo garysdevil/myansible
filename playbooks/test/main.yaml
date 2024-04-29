@@ -10,14 +10,20 @@
       register: mine_rig_status
       ignore_errors: yes
       tags:
-        - stopmine
+        - stopminer
+        - checkminer
     - name: Stop {{ mine_rig }}
       shell: killall {{ mine_rig }}
       when: mine_rig_status.rc == 0
       tags:
-        - stopmine
+        - stopminer
+    - name: Display miner status
+      ansible.builtin.debug:
+        msg: "{{ mine_rig_status.stdout_lines }}"
+      tags:
+        - checkminer
     - name: Get Rig Log
-      shell: tail /opt/{{ mine_project }}/{{ mine_rig }}.log -n 50
+      shell: tail /opt/{{ mine_project }}/{{ mine_rig }}.log -n 20
       register: rig_log
       tags:
         - checklog

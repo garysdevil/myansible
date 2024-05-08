@@ -42,3 +42,6 @@
 # ansible-playbook -i ./local.hosts.conf cess_1.yaml --tags "blockheight"
 # ansible-playbook -i ./local.hosts.conf cess_1.yaml --tags "reward"
 # ansible-playbook -i ./local.hosts.conf cess_1.yaml --tags "start"
+
+# ansible -i ./local.hosts.conf 组名 -m shell -a "cess-multibucket-admin buckets stat | grep 'validated space'" 
+# ansible -i ./local.hosts.conf 组名 -m shell -a "cess-multibucket-admin buckets reward | grep 'total reward'"

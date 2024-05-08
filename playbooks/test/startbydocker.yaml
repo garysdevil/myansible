@@ -1,0 +1,40 @@
+- name: mine
+  hosts: "{{ group }}"
+  vars:
+    - mine_project: XXXXX
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Create Project Directory
+      ansible.builtin.file:
+        path: /opt/{{ mine_project }}
+        state: directory
+        mode: 0744
+    # - name: Create other directories
+    #   ansible.builtin.file:
+    #     path: "{{ item }}"
+    #     state: directory
+    #     mode: 0777
+    #   loop:
+    #     - /opt/{{ mine_project }}/data
+    #     - /opt/{{ mine_project }}/xxx
+    - name: Scp docker compose file
+      ansible.builtin.copy:
+        src: ./docker-compose.yaml
+        dest: /opt/{{ mine_project }}/docker-compose.yaml
+        mode: '0744'
+    - name: Run {{ mine_project }}
+      shell: "docker compose up -d"
+      args:
+        chdir: /opt/{{ mine_project }}
+
+    - name: Check {{ mine_project }} Process
+      shell: "docker compose ps"
+      register: miner_status
+      args:
+        chdir: /opt/{{ mine_project }}
+    - name: Display miner_status
+      ansible.builtin.debug:
+        msg: "{{ miner_status.stdout_lines }}"
+
+# 部署启动挖矿程序 ansible-playbook -i ./local.hosts.conf startbydocker.yaml -e "group=run"

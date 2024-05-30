@@ -1,0 +1,57 @@
+- name: mine
+  hosts: gpu
+  become: true
+  vars:
+    user_id: "xxx"
+    token: "xxx"
+  gather_facts: false
+  tasks:
+    #    - name: Create Directory
+    #      ansible.builtin.file:
+    #        path: /opt/io
+    #        state: directory
+    #        mode: '0744'
+    #    - name: Scp Rig
+    #      ansible.builtin.copy:
+    #        src: ./io_net_launch_binary_linux
+    #        dest: /opt/io/
+    #        mode: '0744'
+    #        
+
+    - name: copy image files
+      ansible.builtin.copy:
+        src: '{{ item.src }}'
+        dest: '/tmp/images/'
+      with_items:
+        - { src: 'io-launch-0529.tar' }
+        # - { src: 'io-worker-monitor-0529.tar' }
+        # - { src: 'io-worker-vc-0529.tar' }
+    - name: load image
+      shell: "docker load < {{ item.image }}"
+      with_items:
+        - { image: 'io-launch-0529.tar' }
+        # - { image: 'io-worker-monitor-0529.tar' }
+        # - { image: 'io-worker-vc-0529.tar' }
+      args:
+        chdir: /tmp/images
+    - name: tag io-launch image 
+      shell: |
+        docker tag 791372d76952 ionetcontainers/io-launch:v0.1
+    #    docker tag 0bd747f9258b ionetcontainers/io-worker-vc:none
+    #    docker tag 5e6822c69b3c ionetcontainers/io-worker-monitor:none"
+    - name: Run io
+      shell: "./io_net_launch_binary_linux --device_id={{ device_id }} --user_id={{ user_id }} --operating_system='Linux' --usegpus=true --device_name={{ device_name }} --token={{ token }} --no_warnings='true'"
+      args:
+        chdir: /opt/io
+
+    - name: Check io
+      shell: docker ps -a
+      register: mine_rig_status
+      ignore_errors: yes
+      tags:
+        - status
+    - name: Display io status
+      ansible.builtin.debug:
+        msg: "{{ mine_rig_status.stdout_lines }}"
+      tags:
+        - status

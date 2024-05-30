@@ -1,0 +1,28 @@
+- name: loop check io
+  hosts: gpu
+  become: true
+  gather_facts: false
+  tasks:
+    - name: scp file
+      copy:
+        src: ./loopcheckio.sh
+        dest: /opt/io/
+        mode: '0744'
+    - name: get run.sh
+      shell: cat /opt/io/run.sh
+      register: result
+      ignore_errors: yes
+    - name: output run.sh
+      ansible.builtin.debug:
+        msg: "{{ result.stdout_lines }}"
+    - name: loop run.sh
+      shell: "nohup ./loopcheckio.sh >> loopcheckio.log 2>&1 &"
+      args:
+        chdir: /opt/io
+    - name: get loopcheckio.log
+      shell: tail -n 10 /opt/io/loopcheckio.log
+      register: status
+      ignore_errors: yes
+    - name: output loopcheckio.log
+      ansible.builtin.debug:
+        msg: "{{ status.stdout_lines }}"

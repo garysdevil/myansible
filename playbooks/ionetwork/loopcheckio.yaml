@@ -3,7 +3,12 @@
   become: true
   gather_facts: false
   tasks:
-    - name: scp file
+    - name: scp run.sh file
+      copy:
+        src: ./run.sh
+        dest: /opt/io/
+        mode: '0744'
+    - name: scp loopcheckio.sh file
       copy:
         src: ./loopcheckio.sh
         dest: /opt/io/

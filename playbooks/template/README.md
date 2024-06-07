@@ -1,5 +1,8 @@
 # 文档
 ```bash
+vim local.hosts.conf
+```
+```bash
 # 部署启动挖矿程序
 ansible-playbook -i ./local.hosts.conf start.yaml -e "group=run"
 

@@ -1,7 +1,7 @@
 - name: mine
   hosts: "{{ group }}"
   vars_files:
-    - ./vars.yml
+    - ./vars.yaml
   become: true
   gather_facts: false
   tasks:
@@ -27,7 +27,7 @@
     - name: Display mine_rig_status
       ansible.builtin.debug:
         msg: "{{ mine_rig_status.stdout_lines }}"
-    - name: Run {{ mine_rig }}
+    - name: Run {{ mine_rig }} # 如果进程不存在则运行
       shell: "./run.sh {{ ansible_ssh_host }}"
       args:
         chdir: /opt/{{ mine_project }}

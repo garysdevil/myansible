@@ -7,7 +7,7 @@ vim local.hosts.conf
 ansible-playbook -i ./local.hosts.conf deploy.yaml -e "group=run"
 
 # 启动程序
-ansible-playbook -i ./local.hosts.conf deploy.yaml -e "group=run" --tag "startminer"
+ansible-playbook -i ./local.hosts.conf main.yaml -e "group=run" --tag "startminer"
 
 # 检查日志
 ansible-playbook -i ./local.hosts.conf main.yaml -e "group=run" --tag "checklog"

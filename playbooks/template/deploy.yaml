@@ -24,8 +24,6 @@
       shell: ps aux | grep '{{ mine_rig }}' | grep -v grep
       register: mine_rig_status
       ignore_errors: yes
-      tags:
-        - startminer
     - name: Display mine_rig_status
       ansible.builtin.debug:
         msg: "{{ mine_rig_status.stdout_lines }}"
@@ -36,5 +34,3 @@
       async: 20 # 设置任务为异步模式，并且定义任务的超时时间。
       poll: 0 # 定义多久检查一次异步任务状态，直到任务完成或超时，默认值为 10 秒。值为0表示无需等待该任务返回。
       when: mine_rig_status.rc != 0
-      tags:
-        - startminer

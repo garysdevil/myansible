@@ -37,4 +37,4 @@
       ansible.builtin.debug:
         msg: "{{ miner_status.stdout_lines }}"
 
-# 部署启动挖矿程序 ansible-playbook -i ./local.hosts.conf startbydocker.yaml -e "group=run"
+# 部署启动挖矿程序 ansible-playbook -i ./local.hosts.conf deploybydocker.yaml -e "group=run"

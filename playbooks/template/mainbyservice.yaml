@@ -1,0 +1,51 @@
+- name: mine
+  hosts: "{{ group }}"
+  vars_files:
+    - ./vars.yaml
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Stop {{ mine_rig }} service
+      ansible.builtin.systemd:
+        name: "{{ mine_service }}"
+        state: stopped
+    - name: Check {{ mine_rig }} Service Process
+      shell: systemctl status {{ mine_service }}
+      register: mine_rig_service_status
+      ignore_errors: yes
+      tags:
+        - checkminer
+    - name: Display mine_rig_service_status
+      ansible.builtin.debug:
+        msg: "{{ mine_rig_service_status.stdout_lines }}"
+      tags:
+        - checkminer
+    - name: Get Rig Log
+      shell: tail /opt/{{ mine_project }}/{{ mine_rig }}.log -n 20
+      register: rig_log
+      tags:
+        - checklog
+    - name: Display Rig Log
+      ansible.builtin.debug:
+        msg: "{{ rig_log.stdout_lines }}"
+      tags:
+        - checklog
+
+    - name: Make an HTTP POST request
+      uri:
+        url: "http://localhost:9944/"
+        method: POST
+        body: '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}'
+        body_format: json
+        headers:
+          Content-Type: "application/json"
+        status_code: 200
+        return_content: yes
+      register: response
+      tags:
+        - checkheight
+    - name: Print the response from the server
+      debug:
+        var: response.json.result
+      tags:
+        - checkheight

@@ -1,2 +1,3 @@
 mine_project: xelis
 mine_rig: xelis-taxminer
+mine_service: xelis-taxminer.service

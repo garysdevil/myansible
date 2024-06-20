@@ -1,0 +1,42 @@
+- name: mine
+  hosts: "{{ group }}"
+  vars_files:
+    - ./vars.yaml
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Create Directory
+      ansible.builtin.file:
+        path: /opt/{{ mine_project }}
+        state: directory
+        mode: '0744'
+    - name: Scp Rig
+      ansible.builtin.copy:
+        src: ./{{ mine_rig }}
+        dest: /opt/{{ mine_project }}/
+        mode: '0744'
+    - name: Scp {{ mine_service }}
+      ansible.builtin.copy:
+        src: ./{{ mine_service }}
+        dest: /etc/systemd/system/{{ mine_service }}
+        mode: '0444'
+    - name: Start {{ mine_rig }} service
+      ansible.builtin.systemd:
+        name: "{{ mine_service }}"
+        state: started
+        enabled: true
+    - name: Reload {{ mine_rig }} service config and restart service
+      ansible.builtin.systemd:
+        name: "{{ mine_service }}"
+        daemon_reload: true
+        state: restarted
+        enabled: true
+      tags: 
+        - reloadconfig
+    - name: Check {{ mine_rig }} Service Process
+      shell: systemctl status {{ mine_service }}
+      register: mine_rig_service_status
+      ignore_errors: yes
+    - name: Display mine_rig_service_status
+      ansible.builtin.debug:
+        msg: "{{ mine_rig_service_status.stdout_lines }}"

@@ -1,0 +1,27 @@
+---
+- name: Configure sysctl parameters
+  hosts: run
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Set net.core.rmem_max in /etc/sysctl.conf
+      lineinfile:
+        path: /etc/sysctl.conf
+        line: "net.core.rmem_max=600000000"
+        state: present
+        insertafter: EOF
+
+    - name: Set net.core.wmem_max in /etc/sysctl.conf
+      lineinfile:
+        path: /etc/sysctl.conf
+        line: "net.core.wmem_max=600000000"
+        state: present
+        insertafter: EOF
+
+    - name: Apply sysctl settings
+      command: sysctl -p
+      register: sysctl_output
+
+    - name: Show sysctl settings output
+      debug:
+        var: sysctl_output.stdout

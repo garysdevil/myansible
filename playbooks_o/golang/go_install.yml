@@ -1,0 +1,50 @@
+---
+- name: Install Go on remote machine
+  hosts: all
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Ensure /opt directory exists
+      file:
+        path: /opt
+        state: directory
+        mode: '0755'
+
+    - name: Copy Go tarball to remote machine
+      copy:
+        src: files/go1.22.4.linux-amd64.tar.gz
+        dest: /opt/go1.22.4.linux-amd64.tar.gz
+        mode: '0644'
+
+    - name: Extract Go tarball
+      unarchive:
+        src: /opt/go1.22.4.linux-amd64.tar.gz
+        dest: /opt
+        remote_src: yes
+        creates: /opt/go
+
+    - name: Ensure Go workspace directory exists
+      file:
+        path: /opt/go/space
+        state: directory
+        mode: '0755'
+
+    - name: Set Go environment variables
+      copy:
+        content: |
+          export GOROOT=/opt/go
+          export GOPATH=/opt/go/space
+          export PATH=$PATH:/opt/go/bin:/opt/go/space/bin
+          export GO111MODULE=on
+        dest: /etc/profile.d/golang.sh
+        mode: '0755'
+
+    - name: Check Go version
+      shell: source /etc/profile.d/golang.sh && go version
+      register: go_version
+      args:
+            executable: /bin/bash
+
+    - name: Print Go version
+      debug:
+        msg: "{{ go_version.stdout }}"

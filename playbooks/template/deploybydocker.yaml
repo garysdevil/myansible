@@ -23,6 +23,26 @@
         src: ./docker-compose.yaml
         dest: /opt/{{ mine_project }}/docker-compose.yaml
         mode: '0744'
+  
+  # # 拷贝镜像，加载镜像
+  #   - name: Copy compressed Docker images to /tmp on the target host
+  #     ansible.builtin.copy:
+  #       src: ./docker-images.tar.gz  # 本地压缩文件路径
+  #       dest: /tmp/docker-images.tar.gz  # 目标主机路径
+  #       mode: '0644'
+  #   - name: Extract Docker images in /tmp on the target host
+  #     unarchive:
+  #       src: /tmp/docker-images.tar.gz  # 压缩文件路径
+  #       dest: /tmp/ # 解压路径
+  #       remote_src: yes  # 表示压缩文件已存在于目标主机
+  #       mode: '0755'
+  #   - name: Load Docker images on the target host
+  #     shell: "docker load -i {{ item }}"
+  #     args:
+  #       chdir: /tmp/docker-images/  # 切换到解压后的目录
+  #     with_fileglob:
+  #       - "/tmp/docker-images/*.image"  # 匹配解压后的所有 .image 文件
+
     - name: Run {{ mine_project }}
       shell: "docker compose up -d"
       args:

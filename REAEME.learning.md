@@ -72,8 +72,11 @@ ansible -i ./local.hosts.conf ${group_name} -m shell -a "df -hT | grep T"
 ```yaml
     - name: Run updatedb
         command: /usr/bin/updatedb
-        async: 300 # async的值是ansible等待运行这个任务的最大超时值
-        poll: 10 # poll就是ansible检查这个任务是否完成的频率时间
+        async: 600  # 指定任务的最大运行时间为 600 秒。如果任务未完成，将自动终止。 
+        poll: 0 # 将 poll 设置为 0 表示立即返回，不等待任务完成。
+
+# async 默认值：0，如果不显式设置 async，任务不会以异步方式运行，而是同步执行，Ansible 会等待任务完成。
+# poll 默认值：10，如果不显式设置 poll，Ansible 会每 10 秒检查任务的状态，直到任务完成或超出 async 指定的时间。
 ```
 
 ### Jinja

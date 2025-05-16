@@ -27,7 +27,7 @@
 
 
 # - name: Install monitor
-#   hosts: {{ group }}
+#   hosts: "{{ group }}"
 #   gather_facts: yes
 #   # vars:
 #   #   zabbix_agent_hostname: "{{ ansible_eno2['ipv4']['address'] }}" # 网卡是不确定的
